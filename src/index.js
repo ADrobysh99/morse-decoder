@@ -38,15 +38,18 @@ const MORSE_TABLE = {
 };
 
 function decode(expr) {
-    let decodStr = expr.split(/(\d{10})/g).join(' ').replace(/10/g , '.').replace(/11/g , '-').replace(/0/g , '').split(' ').join(' ').replace(/\*{10}/g , '|').split(' ').map(function(item ){
-        for ( let key in MORSE_TABLE) {
-     if(key == item) {
-       return item=MORSE_TABLE[key];
-     } 
-   }
-   }).join('');
- 
-   return decodStr;
+    let MorseTableDecod ={};
+    let firstdigit = 0;
+    let result = '';
+    for(i in MORSE_TABLE){
+        MorseTableDecod[i.replace(/\./g, '10').replace(/-/g, '11').padStart(10,'0')] = MORSE_TABLE[i];
+    };
+    MorseTableDecod['**********'] = ' ';
+    while (firstdigit < expr.length){
+        result +=  MorseTableDecod[expr.slice(firstdigit, firstdigit + 10)]
+        firstdigit += 10;
+    };
+    return result;
 }
 
 module.exports = {
